@@ -1,0 +1,15 @@
+:80 {
+    root * /app
+
+    # Do not expose application configuration, SQL dumps, or repository files.
+    @private path /config/* /database/* /.env* /.git/* /README.md /Caddyfile /Dockerfile.vercel
+    respond @private 404
+
+    # Execute PHP scripts through FrankenPHP.
+    php_server
+
+    # Serve public static assets.
+    file_server
+
+    header -X-Powered-By
+}

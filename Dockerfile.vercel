@@ -1,0 +1,21 @@
+FROM dunglas/frankenphp:1-php8.5-bookworm
+
+# Install the PHP extension required by the application's PDO MySQL connection.
+RUN install-php-extensions pdo_mysql
+
+# Use PHP's production configuration.
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+WORKDIR /app
+
+# Copy the application into the container.
+COPY . /app
+
+# Configure Caddy / FrankenPHP.
+COPY Caddyfile /etc/caddy/Caddyfile
+
+ENV SERVER_NAME=:80
+
+EXPOSE 80
+
+CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
